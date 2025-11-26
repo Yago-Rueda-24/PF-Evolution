@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import '../assets/login.css'
-
+import { hola } from '../../../service/service'
 const LoginForm = (): React.JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -8,6 +8,7 @@ const LoginForm = (): React.JSX.Element => {
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault()
     console.log('Login attempt:', { email, password })
+    hola()
     // Here you would typically call your auth service
     // window.api.login({ email, password })
   }
