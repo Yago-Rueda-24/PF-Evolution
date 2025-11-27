@@ -21,6 +21,13 @@ export class UserService {
         }
     }
 
-    login(email: string, password: string): void {
+    async login(email: string, password: string): Promise<void> {
+        try {
+            const data = await this.userRepository.login(email, password)
+            console.log(data)
+        } catch (error) {
+            console.error('Login failed:', error)
+            throw error
+        }
     }
 }
