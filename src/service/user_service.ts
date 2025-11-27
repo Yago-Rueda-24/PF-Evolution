@@ -1,20 +1,22 @@
 import { UserRepository } from "../repository/user_repo";
-import { ProfileRepository } from "../repository/profile_repo";
 
 export class UserService {
     private userRepository: UserRepository
-    private profileRepository: ProfileRepository
 
     constructor() {
         this.userRepository = new UserRepository()
-        this.profileRepository = new ProfileRepository()
     }
 
-    async register(email: string, password: string): Promise<void> {
+    async register(email: string, password: string, confirmPassword: string): Promise<void> {
         console.log('Register attempt:', { email, password })
         try {
-            const data = await this.userRepository.register(email, password)
-            await this.profileRepository.createProfile(data.user?.id)
+            if (email === "" || password === "" || confirmPassword === "") {
+                throw new Error('Email and password are required')
+            }
+            if (password !== confirmPassword) {
+                throw new Error('Passwords do not match')
+            }
+            await this.userRepository.register(email, password)
         } catch (error) {
             console.error('Register failed:', error)
             throw error
@@ -23,8 +25,16 @@ export class UserService {
 
     async login(email: string, password: string): Promise<void> {
         try {
-            const data = await this.userRepository.login(email, password)
-            console.log(data)
+            const user = await this.userRepository.find_user(email)
+            console.log(user)
+            if (!user) {
+                throw new Error('User not found')
+            }
+            if (user.password == password) {
+                console.log('Login successful:', { email })
+            } else {
+                throw new Error('Invalid password')
+            }
         } catch (error) {
             console.error('Login failed:', error)
             throw error

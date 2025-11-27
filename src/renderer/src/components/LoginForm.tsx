@@ -16,8 +16,14 @@ const LoginForm = (): React.JSX.Element => {
 
   const handleLogin = (e: React.FormEvent): void => {
     e.preventDefault()
-    console.log('Login attempt:', { email, password })
-    user_service.login(email, password) 
+    try {
+      console.log('Login attempt:', { email, password })
+      user_service.login(email, password)
+    } catch (error: any) {
+      const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
+      alert(errorMessage)
+    }
+
   }
 
   const handleRegister = async (e: React.FormEvent): Promise<void> => {
@@ -28,7 +34,7 @@ const LoginForm = (): React.JSX.Element => {
     }
     console.log('Register attempt:', { regUsername, regPassword })
     try {
-      await user_service.register(regUsername, regPassword)
+      await user_service.register(regUsername, regPassword, regConfirmPassword)
     } catch (error: any) {
       const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
       alert(errorMessage)

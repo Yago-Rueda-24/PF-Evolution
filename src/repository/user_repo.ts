@@ -8,10 +8,13 @@ export class UserRepository {
     }
 
     async register(email: string, password: string) {
-        const { data, error } = await this.supabase.auth.signUp({
-            email,
-            password,
-        })
+
+        const { data, error } = await this.supabase
+            .from('users')
+            .insert([
+                { email: email, password: password },
+            ])
+            .select()
 
         if (error) {
             throw new Error(error.message)
@@ -20,17 +23,18 @@ export class UserRepository {
         return data
     }
 
-    async login(email: string, password: string) {
-        const { data, error } = await this.supabase.auth.signInWithPassword({
-            email,
-            password,
-        })
+    async find_user(email: string) {
+        let { data: users, error } = await this.supabase
+            .from('users')
+            .select("*")
+            .eq('email', email)
 
         if (error) {
             throw new Error(error.message)
         }
 
-        return data
+        console.log(users)
+        return users && users.length > 0 ? users[0] : null
     }
 }
 
