@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import '../assets/login.css'
 import { UserService } from '../../../service/user_service'
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
 
 const LoginForm = (): React.JSX.Element => {
   // Login State
@@ -12,32 +13,56 @@ const LoginForm = (): React.JSX.Element => {
   const [regPassword, setRegPassword] = useState('')
   const [regConfirmPassword, setRegConfirmPassword] = useState('')
 
+  // Dialog State
+  const [open, setOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [title, setTitle] = useState('')
+
   const user_service = new UserService()
 
-  const handleLogin = (e: React.FormEvent): void => {
+  const handleClose = (): void => {
+    setOpen(false)
+    setErrorMessage('')
+    setTitle('')
+  }
+
+  const showError = (message: string): void => {
+    setErrorMessage(message)
+    setOpen(true)
+    setTitle('Error')
+  }
+
+  const showSuccess = (message: string): void => {
+    setErrorMessage(message)
+    setOpen(true)
+    setTitle('Success')
+  }
+
+  const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     try {
       console.log('Login attempt:', { email, password })
-      user_service.login(email, password)
+      await user_service.login(email, password)
     } catch (error: any) {
-      const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
-      alert(errorMessage)
+      const message = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
+      showError(message)
     }
-
   }
 
   const handleRegister = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     if (regPassword !== regConfirmPassword) {
-      alert("Passwords don't match")
+      showError("Passwords don't match")
       return
     }
     console.log('Register attempt:', { regUsername, regPassword })
     try {
-      await user_service.register(regUsername, regPassword, regConfirmPassword)
+      await user_service.register(regUsername, regPassword, regConfirmPassword).then(() => {
+        showSuccess('User registered successfully')
+      })
     } catch (error: any) {
-      const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
-      alert(errorMessage)
+      const message = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
+      showError(message)
     }
   }
 
@@ -151,6 +176,27 @@ const LoginForm = (): React.JSX.Element => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {title}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {errorMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -17,6 +17,25 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
+    }
+  })
+
+  ipcMain.handle('show-error-dialog', async (_event, message: string) => {
+    const win = BrowserWindow.fromWebContents(_event.sender)
+    if (!win) return
+
+    await dialog.showMessageBox(win, {
+      type: 'error',
+      title: 'Error',
+      message
+    })
+
+    // Workaround de foco en Windows
+    if (process.platform === 'win32') {
+      win.blur()
+      setTimeout(() => {
+        win.focus()
+      }, 0)
     }
   })
 
@@ -54,6 +73,9 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+
+
 
   createWindow()
   dotenv.config()
