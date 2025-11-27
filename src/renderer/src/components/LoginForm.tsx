@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import '../assets/login.css'
 import { UserService } from '../../../service/user_service'
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = (): React.JSX.Element => {
   // Login State
@@ -19,6 +20,7 @@ const LoginForm = (): React.JSX.Element => {
   const [title, setTitle] = useState('')
 
   const user_service = new UserService()
+  const navigate = useNavigate();
 
   const handleClose = (): void => {
     setOpen(false)
@@ -42,7 +44,9 @@ const LoginForm = (): React.JSX.Element => {
     e.preventDefault()
     try {
       console.log('Login attempt:', { email, password })
-      await user_service.login(email, password)
+      await user_service.login(email, password).then(() => {
+        navigate('/vault')
+      })
     } catch (error: any) {
       const message = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
       showError(message)
@@ -140,7 +144,7 @@ const LoginForm = (): React.JSX.Element => {
               <label htmlFor="email">Email</label>
               <div className="input-wrapper">
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   className="form-input"
                   placeholder="Enter your email"

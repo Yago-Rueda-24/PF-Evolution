@@ -28,7 +28,8 @@
     "@mui/material": "^7.3.5",
     "@supabase/supabase-js": "^2.86.0",
     "dotenv": "^17.2.3",
-    "electron-updater": "^6.3.9"
+    "electron-updater": "^6.3.9",
+    "react-router-dom": "^7.9.6"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
