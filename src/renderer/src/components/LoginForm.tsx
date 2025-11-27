@@ -20,14 +20,19 @@ const LoginForm = (): React.JSX.Element => {
     user_service.login(email, password) 
   }
 
-  const handleRegister = (e: React.FormEvent): void => {
+  const handleRegister = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     if (regPassword !== regConfirmPassword) {
       alert("Passwords don't match")
       return
     }
     console.log('Register attempt:', { regUsername, regPassword })
-    user_service.register(regUsername, regPassword)
+    try {
+      await user_service.register(regUsername, regPassword)
+    } catch (error: any) {
+      const errorMessage = error?.message || (typeof error === 'string' ? error : JSON.stringify(error))
+      alert(errorMessage)
+    }
   }
 
   return (
