@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from "../infrastructure/supabase"
 
 export class UserRepository {
     private supabase: any
 
     constructor() {
-        this.supabase = createClient("https://kwgeyggoqmlqdprnjceo.supabase.co", "token")
+        this.supabase = supabase
     }
 
     async register(email: string, password: string) {
