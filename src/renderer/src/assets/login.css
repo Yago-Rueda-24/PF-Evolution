@@ -8,6 +8,13 @@
   font-family: 'Inter', sans-serif;
 }
 
+.auth-wrapper {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  padding: 20px;
+}
+
 .login-card {
   background: rgba(32, 33, 39, 0.7);
   backdrop-filter: blur(20px);
