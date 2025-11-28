@@ -1,5 +1,6 @@
 import React from 'react'
 import '../assets/vault.css'
+import VaultEntryForm from './VaultEntryForm'
 
 const Vault = (): React.JSX.Element => {
     return (
@@ -11,14 +12,15 @@ const Vault = (): React.JSX.Element => {
                 <aside className="vault-aside">
                     <nav>
                         <ul>
-                            <li>Dashboard</li>
-                            <li>Settings</li>
+                            <li style={{ color: 'blue' }}>Dashboard</li>
+                            <li style={{ color: 'blue' }}>Settings</li>
                         </ul>
                     </nav>
                 </aside>
                 <main className="vault-content">
                     <h2>Welcome to your Vault</h2>
                     <p>Select an item from the sidebar to get started.</p>
+                    <VaultEntryForm />
                 </main>
             </div>
         </div>
