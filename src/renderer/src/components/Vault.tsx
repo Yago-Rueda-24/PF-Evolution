@@ -2,8 +2,24 @@ import React from 'react'
 import '../assets/vault.css'
 import VaultEntryForm from './VaultEntryForm'
 import VaultItem from './VaultItem'
+import { useState, useEffect } from 'react'
+import { EntradaService } from '../../../service/entrada_service'
 
 const Vault = (): React.JSX.Element => {
+    const [entries, setEntries] = useState([])
+    const entradaService = new EntradaService()
+
+    useEffect(() => {
+        const userid = sessionStorage.getItem('id')
+        if (!userid) {
+            return
+        }
+        console.log(userid)
+        entradaService.get_all(userid).then((data) => {
+            setEntries(data)
+        })
+    }, [])
+
     return (
         <div className="vault-container">
             <header className="vault-header">
@@ -23,9 +39,9 @@ const Vault = (): React.JSX.Element => {
                     <p>Select an item from the sidebar to get started.</p>
                     <VaultEntryForm />
                     <div className="vault-list">
-                        <VaultItem name="Netflix" username="user@example.com" password="password123" />
-                        <VaultItem name="Spotify" username="music_lover" password="securepass" />
-                        <VaultItem name="Google" username="yago@gmail.com" password="mysecretpassword" />
+                        {entries.map((entry: any) => (
+                            <VaultItem key={entry.id} name={entry.nombre} username={entry.usuario} password={entry.password} />
+                        ))}
                     </div>
 
                 </main>

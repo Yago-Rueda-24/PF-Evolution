@@ -32,6 +32,7 @@ export class UserService {
             }
             if (user.password == password) {
                 console.log('Login successful:', { email })
+                sessionStorage.setItem('id', user.id)
             } else {
                 throw new Error('Invalid password')
             }

@@ -1,6 +1,11 @@
 import React from 'react'
 
 const VaultEntryForm = (): React.JSX.Element => {
+
+    const handleCreate = () => {
+        console.log(sessionStorage.getItem('id'))
+    }
+
     return (
         <div className="vault-entry-form">
             <h3>Add New Entry</h3>
@@ -18,7 +23,7 @@ const VaultEntryForm = (): React.JSX.Element => {
                     <input type="password" id="password" placeholder="Password" />
                 </div>
             </div>
-            <button className="add-btn">Add Entry</button>
+            <button className="add-btn" onClick={handleCreate}>Add Entry</button>
         </div>
     )
 }
