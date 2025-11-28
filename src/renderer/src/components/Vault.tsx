@@ -35,8 +35,6 @@ const Vault = (): React.JSX.Element => {
                     </nav>
                 </aside>
                 <main className="vault-content">
-                    <h2>Welcome to your Vault</h2>
-                    <p>Select an item from the sidebar to get started.</p>
                     <VaultEntryForm />
                     <div className="vault-list">
                         {entries.map((entry: any) => (
