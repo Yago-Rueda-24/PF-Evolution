@@ -23,6 +23,25 @@ export class EntradaRepository {
     }
 
 
+    async create(userid: string, name: string, username: string, password: string) {
+        let { data: entry, error } = await this.supabase
+            .from('entradas')
+            .insert({
+                nombre: name,
+                usuario: username,
+                password: password,
+                user_id: userid
+            })
+
+        if (error) {
+            throw new Error(error.message)
+        }
+
+        console.log(entry)
+        return entry
+    }
+
+
 
 
 }
