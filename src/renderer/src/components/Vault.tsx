@@ -4,8 +4,10 @@ import VaultItem from './VaultItem'
 import { useState, useEffect } from 'react'
 import { EntradaService } from '../../../service/entrada_service'
 import InfoDialog from './InfoDialog'
+import { useNavigate } from 'react-router-dom'
 
 const Vault = (): React.JSX.Element => {
+    const navigate = useNavigate()
     const [name, setName] = React.useState('')
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
@@ -78,6 +80,17 @@ const Vault = (): React.JSX.Element => {
         setOpen(true)
     }
 
+    const logout = () => {
+        sessionStorage.clear()
+        navigate('/')
+    }
+
+    const exit = () => {
+        sessionStorage.clear()
+        // @ts-ignore
+        window.electronAPI.exit()
+
+    }
     useEffect(() => {
         get_entries()
     }, [])
@@ -86,6 +99,8 @@ const Vault = (): React.JSX.Element => {
         <div className="vault-container">
             <header className="vault-header">
                 <h1>My Vault</h1>
+                <button onClick={logout}>Logout</button>
+                <button onClick={exit}>Exit</button>
             </header>
             <div className="vault-main">
                 <aside className="vault-aside">

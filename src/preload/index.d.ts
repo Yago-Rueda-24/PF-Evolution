@@ -5,7 +5,8 @@ declare global {
     electron: ElectronAPI
     api: unknown
     electronAPI: {
-      showError: (message: string) => void
+      showError: (message: string) => void,
+      exit: () => void
     }
   }
 }

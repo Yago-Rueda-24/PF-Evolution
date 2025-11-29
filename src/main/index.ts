@@ -43,6 +43,8 @@ function createWindow(): void {
     mainWindow.show()
   })
 
+
+
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
     return { action: 'deny' }
@@ -73,6 +75,13 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.on('exit', () => {
+    console.log('Exit command received')
+    app.quit()
+  })
+
+
 
 
 

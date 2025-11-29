@@ -12,7 +12,8 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('electronAPI', {
-      showError: (message: string) => ipcRenderer.invoke('show-error-dialog', message)
+      showError: (message: string) => ipcRenderer.invoke('show-error-dialog', message),
+      exit: () => ipcRenderer.send('exit')
     })
   } catch (error) {
     console.error(error)
