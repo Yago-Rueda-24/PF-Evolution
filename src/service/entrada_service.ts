@@ -28,4 +28,25 @@ export class EntradaService {
             throw error
         }
     }
+    async delete(id: string) {
+        try {
+            await this.entradaRepository.delete(id)
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+
+    async update(id: string, name: string, username: string, password: string) {
+        try {
+            if (!id || !name || !username || !password) {
+                throw new Error('All fields are required')
+            }
+            let data = await this.entradaRepository.update(id, name, username, password)
+            return data
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
 }

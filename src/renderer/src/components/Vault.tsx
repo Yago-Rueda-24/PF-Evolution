@@ -9,6 +9,8 @@ const Vault = (): React.JSX.Element => {
     const [name, setName] = React.useState('')
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [editingId, setEditingId] = useState<string | null>(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     const [open, setOpen] = useState(false)
     const [title, setTitle] = useState('')
@@ -21,17 +23,47 @@ const Vault = (): React.JSX.Element => {
 
     const get_entries = () => {
         entradaService.get_all(sessionStorage.getItem('id')!).then((data) => {
-            setEntries(data)
+            setEntries(data || [])
         })
     }
 
     const handleCreate = () => {
-        console.log(sessionStorage.getItem('id'))
-        entradaService.create(sessionStorage.getItem('id')!, name, username, password).then((data) => {
-            console.log(data)
+        if (editingId) {
+            entradaService.update(editingId, name, username, password).then(() => {
+                get_entries()
+                setEditingId(null)
+                setName('')
+                setUsername('')
+                setPassword('')
+            }).catch((error) => {
+                console.log(error)
+                handleOpen('Error', error.message)
+            })
+        } else {
+            entradaService.create(sessionStorage.getItem('id')!, name, username, password).then((data) => {
+                console.log(data)
+                get_entries()
+                setName('')
+                setUsername('')
+                setPassword('')
+            }).catch((error) => {
+                console.log(error)
+                handleOpen('Error', error.message)
+            })
+        }
+    }
+
+    const handleEdit = (id: string, name: string, username: string, password: string) => {
+        setEditingId(id)
+        setName(name)
+        setUsername(username)
+        setPassword(password)
+    }
+
+    const handleDelete = (id: string) => {
+        entradaService.delete(id).then(() => {
             get_entries()
         }).catch((error) => {
-            console.log(error)
             handleOpen('Error', error.message)
         })
     }
@@ -66,27 +98,56 @@ const Vault = (): React.JSX.Element => {
                 </aside>
                 <main className="vault-content">
                     <div className="vault-entry-form">
-                        <h3>Add New Entry</h3>
+                        <h3>{editingId ? 'Edit Entry' : 'Add New Entry'}</h3>
                         <div className="vault-inputs-row">
                             <div className="form-group">
                                 <label htmlFor="name">Name</label>
-                                <input type="text" id="name" placeholder="Entry Name" onChange={(e) => setName(e.target.value)} />
+                                <input type="text" id="name" placeholder="Entry Name" value={name} onChange={(e) => setName(e.target.value)} />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="username">User</label>
-                                <input type="text" id="username" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+                                <input type="text" id="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
-                                <input type="password" id="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                                <div style={{ display: 'flex', gap: '5px' }}>
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        id="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        style={{ flex: 1 }}
+                                    />
+                                    <button
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        style={{ padding: '0 10px', cursor: 'pointer' }}
+                                    >
+                                        {showPassword ? 'Hide' : 'Show'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        <button className="add-btn" onClick={handleCreate}>Add Entry</button>
+                        <button className="add-btn" onClick={handleCreate}>{editingId ? 'Update Entry' : 'Add Entry'}</button>
+                        {editingId && <button className="cancel-btn" onClick={() => {
+                            setEditingId(null)
+                            setName('')
+                            setUsername('')
+                            setPassword('')
+                        }}>Cancel</button>}
                     </div>
                     <div className="vault-list">
-                        {entries.map((entry: any) => (
-                            <VaultItem key={entry.id} name={entry.nombre} username={entry.usuario} password={entry.password} />
-                        ))}
+                        {entries.length > 0 ? entries.map((entry: any) => (
+                            <VaultItem
+                                key={entry.id}
+                                id={entry.id}
+                                name={entry.nombre}
+                                username={entry.usuario}
+                                password={entry.password}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                            />
+                        )) : <p>No entries found</p>}
                     </div>
 
                 </main>
