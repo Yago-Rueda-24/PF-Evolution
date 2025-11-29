@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import '../assets/login.css'
 import { UserService } from '../../../service/user_service'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material'
+import InfoDialog from './InfoDialog'
 import { useNavigate } from 'react-router-dom'
 
 const LoginForm = (): React.JSX.Element => {
@@ -181,26 +181,12 @@ const LoginForm = (): React.JSX.Element => {
         </div>
       </div>
 
-      <Dialog
+      <InfoDialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {title}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {errorMessage}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} autoFocus>
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+        title={title}
+        message={errorMessage}
+      />
     </div>
   )
 }
