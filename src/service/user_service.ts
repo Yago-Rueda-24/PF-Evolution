@@ -32,7 +32,7 @@ export class UserService {
 
     async login(email: string, password: string): Promise<void> {
         try {
-            const user = await this.userRepository.find_user(email)
+            const user = await this.userRepository.find_user_by_email(email)
             console.log(user)
             if (!user) {
                 throw new Error('User not found')

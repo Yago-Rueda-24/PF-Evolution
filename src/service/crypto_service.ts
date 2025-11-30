@@ -6,18 +6,24 @@ export class CryptoService {
         return crypto.randomBytes(32).toString('hex')
     }
 
-    encrypt(text: string, key: string) {
-        const iv = crypto.randomBytes(16)
-        const cipher = crypto.createCipheriv('aes-256-cbc', key, iv)
-        let encrypted = cipher.update(text)
-        encrypted = Buffer.concat([encrypted, cipher.final()])
-        return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') }
+    generateIV(): string {
+        return crypto.randomBytes(16).toString('hex')
     }
 
-    decrypt(encryptedData: { iv: string, encryptedData: string }, key: string) {
-        const iv = Buffer.from(encryptedData.iv, 'hex')
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv)
-        let decrypted = decipher.update(encryptedData.encryptedData, 'hex', 'utf-8')
+    encrypt(text: string, key: string, iv: string) {
+        let buufiv = Buffer.from(iv, 'hex')
+        let bufKey = Buffer.from(key, 'hex')
+        const cipher = crypto.createCipheriv('aes-256-cbc', bufKey, buufiv)
+        let encrypted = cipher.update(text)
+        encrypted = Buffer.concat([encrypted, cipher.final()])
+        return encrypted.toString('hex')
+    }
+
+    decrypt(iv: string, encryptedData: string, key: string) {
+        let buufiv = Buffer.from(iv, 'hex')
+        let bufKey = Buffer.from(key, 'hex')
+        const decipher = crypto.createDecipheriv('aes-256-cbc', bufKey, buufiv)
+        let decrypted = decipher.update(encryptedData, 'hex', 'utf-8')
         decrypted += decipher.final('utf-8')
         return decrypted
     }

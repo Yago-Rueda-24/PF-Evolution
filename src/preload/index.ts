@@ -20,6 +20,9 @@ if (process.contextIsolated) {
     })
     contextBridge.exposeInMainWorld('cryptoApi', {
       generateKey: () => api.cryptoService.generateKey(),
+      generateIV: () => api.cryptoService.generateIV(),
+      encrypt: (text: string, key: string, iv: string) => api.cryptoService.encrypt(text, key, iv),
+      decrypt: (iv: string, encryptedData: string, key: string) => api.cryptoService.decrypt(iv, encryptedData, key)
     })
   } catch (error) {
     console.error(error)

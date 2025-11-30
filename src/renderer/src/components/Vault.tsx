@@ -31,7 +31,7 @@ const Vault = (): React.JSX.Element => {
 
     const handleCreate = () => {
         if (editingId) {
-            entradaService.update(editingId, name, username, password).then(() => {
+            entradaService.update(editingId, name, username, password, sessionStorage.getItem('id')!).then(() => {
                 get_entries()
                 setEditingId(null)
                 setName('')

@@ -9,7 +9,9 @@ declare global {
       exit: () => void
     }
     cryptoApi: {
-      generateKey: () => string
+      generateKey: () => string,
+      encrypt: (text: string, key: string) => { iv: string, encryptedData: string },
+      decrypt: (iv: string, encryptedData: string, key: string) => string
     }
   }
 }

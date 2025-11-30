@@ -23,13 +23,14 @@ export class EntradaRepository {
     }
 
 
-    async create(userid: string, name: string, username: string, password: string) {
+    async create(userid: string, name: string, username: string, password: string, iv: string) {
         let { data: entry, error } = await this.supabase
             .from('entradas')
             .insert({
                 nombre: name,
                 usuario: username,
                 password: password,
+                IV: iv,
                 user_id: userid
             })
 
@@ -55,10 +56,10 @@ export class EntradaRepository {
         }
     }
 
-    async update(id: string, name: string, username: string, password: string) {
+    async update(id: string, name: string, username: string, password: string, iv: string) {
         const { data, error } = await this.supabase
             .from('entradas')
-            .update({ nombre: name, usuario: username, password: password })
+            .update({ nombre: name, usuario: username, password: password, IV: iv })
             .eq('id', id)
             .select()
 
