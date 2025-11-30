@@ -4,10 +4,10 @@ import VaultItem from './VaultItem'
 import { useState, useEffect } from 'react'
 import { EntradaService } from '../../../service/entrada_service'
 import InfoDialog from './InfoDialog'
-import { useNavigate } from 'react-router-dom'
+import VaultHeader from './VaultHeader'
+import VaultSidebar from './VaultSidebar'
 
 const Vault = (): React.JSX.Element => {
-    const navigate = useNavigate()
     const [name, setName] = React.useState('')
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
@@ -80,37 +80,16 @@ const Vault = (): React.JSX.Element => {
         setOpen(true)
     }
 
-    const logout = () => {
-        sessionStorage.clear()
-        navigate('/')
-    }
 
-    const exit = () => {
-        sessionStorage.clear()
-        // @ts-ignore
-        window.electronAPI.exit()
-
-    }
     useEffect(() => {
         get_entries()
     }, [])
 
     return (
         <div className="vault-container">
-            <header className="vault-header">
-                <h1>My Vault</h1>
-                <button onClick={logout}>Logout</button>
-                <button onClick={exit}>Exit</button>
-            </header>
+            <VaultHeader />
             <div className="vault-main">
-                <aside className="vault-aside">
-                    <nav>
-                        <ul>
-                            <li style={{ color: 'blue' }}>Dashboard</li>
-                            <li style={{ color: 'blue' }}>Settings</li>
-                        </ul>
-                    </nav>
-                </aside>
+                <VaultSidebar />
                 <main className="vault-content">
                     <div className="vault-entry-form">
                         <h3>{editingId ? 'Edit Entry' : 'Add New Entry'}</h3>
