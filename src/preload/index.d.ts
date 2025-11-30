@@ -8,5 +8,8 @@ declare global {
       showError: (message: string) => void,
       exit: () => void
     }
+    cryptoApi: {
+      generateKey: () => string
+    }
   }
 }

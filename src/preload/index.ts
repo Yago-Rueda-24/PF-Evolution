@@ -1,8 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { CryptoService } from '../service/crypto_service'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  cryptoService: new CryptoService()
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -14,6 +17,9 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electronAPI', {
       showError: (message: string) => ipcRenderer.invoke('show-error-dialog', message),
       exit: () => ipcRenderer.send('exit')
+    })
+    contextBridge.exposeInMainWorld('cryptoApi', {
+      generateKey: () => api.cryptoService.generateKey(),
     })
   } catch (error) {
     console.error(error)
