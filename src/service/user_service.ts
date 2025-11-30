@@ -1,10 +1,13 @@
 import { UserRepository } from "../repository/user_repo";
 
+
 export class UserService {
     private userRepository: UserRepository
 
+
     constructor() {
         this.userRepository = new UserRepository()
+
     }
 
     async register(email: string, password: string, confirmPassword: string): Promise<void> {
@@ -16,7 +19,11 @@ export class UserService {
             if (password !== confirmPassword) {
                 throw new Error('Passwords do not match')
             }
-            await this.userRepository.register(email, password)
+            //@ts-ignore
+            let key: string = window.cryptoApi.generateKey()
+            console.log(key)
+            await this.userRepository.register(email, password, key)
+
         } catch (error) {
             console.error('Register failed:', error)
             throw error

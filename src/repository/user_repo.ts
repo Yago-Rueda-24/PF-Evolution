@@ -7,12 +7,12 @@ export class UserRepository {
         this.supabase = supabase
     }
 
-    async register(email: string, password: string) {
+    async register(email: string, password: string, key: string) {
 
         const { data, error } = await this.supabase
             .from('users')
             .insert([
-                { email: email, password: password },
+                { email: email, password: password, aes_key: key },
             ])
             .select()
 
