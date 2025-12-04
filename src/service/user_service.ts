@@ -19,6 +19,12 @@ export class UserService {
             if (password !== confirmPassword) {
                 throw new Error('Passwords do not match')
             }
+
+
+            let existe = await this.userRepository.find_user_by_email(email)
+            if (existe) {
+                throw new Error('User already exists')
+            }
             //@ts-ignore
             let key: string = window.cryptoApi.generateKey()
             console.log(key)
