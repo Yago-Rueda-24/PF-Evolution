@@ -115,7 +115,8 @@ const Vault = (): React.JSX.Element => {
                                     />
                                     <button
                                         onClick={() => setShowPassword(!showPassword)}
-                                        style={{ padding: '0 10px', cursor: 'pointer' }}
+                                        className="add-btn"
+                                        style={{ marginTop: 0 }}
                                     >
                                         {showPassword ? 'Hide' : 'Show'}
                                     </button>
